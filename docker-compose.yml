@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    image: application-finder:latest
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DB_PATH=/data/vacancies.db
+      - TZ=Europe/Amsterdam
+    volumes:
+      - app-data:/data
+
+volumes:
+  app-data:
