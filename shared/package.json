@@ -5,6 +5,6 @@
   "main": "dist/types.js",
   "types": "dist/types.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc -b"
   }
 }
