@@ -55,8 +55,8 @@ function initSchema(db: Database.Database) {
       contact_name      TEXT,
       contact_email     TEXT,
       contact_phone     TEXT,
-      scraped_at        TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at        TEXT NOT NULL DEFAULT (datetime('now')),
+      scraped_at        TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+      updated_at        TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
       is_active         INTEGER NOT NULL DEFAULT 1,
       UNIQUE(external_id, municipality_id)
     );

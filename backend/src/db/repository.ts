@@ -58,7 +58,7 @@ export function upsertVacancy(v: ScrapedVacancy, salaryParsed?: { min?: number; 
       contact_name = excluded.contact_name,
       contact_email = excluded.contact_email,
       contact_phone = excluded.contact_phone,
-      updated_at = datetime('now'),
+      updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now'),
       is_active = 1
   `).run(
     v.externalId, v.municipalityId, v.title, v.department ?? null, v.location ?? null,
@@ -78,7 +78,7 @@ export function deactivateMissing(municipalityId: string, activeExternalIds: str
 
   const placeholders = activeExternalIds.map(() => '?').join(',');
   db.prepare(`
-    UPDATE vacancies SET is_active = 0, updated_at = datetime('now')
+    UPDATE vacancies SET is_active = 0, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now')
     WHERE municipality_id = ? AND external_id NOT IN (${placeholders}) AND is_active = 1
   `).run(municipalityId, ...activeExternalIds);
 }
@@ -265,7 +265,7 @@ export function logScrapeStart(municipalityId: string): number {
   const db = getDb();
   const result = db.prepare(`
     INSERT INTO scrape_log (municipality_id, started_at, status)
-    VALUES (?, datetime('now'), 'running')
+    VALUES (?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), 'running')
   `).run(municipalityId);
   return Number(result.lastInsertRowid);
 }
@@ -274,7 +274,7 @@ export function logScrapeEnd(logId: number, status: 'success' | 'error', found: 
   const db = getDb();
   db.prepare(`
     UPDATE scrape_log SET
-      finished_at = datetime('now'),
+      finished_at = strftime('%Y-%m-%dT%H:%M:%fZ','now'),
       status = ?,
       vacancies_found = ?,
       vacancies_new = ?,
